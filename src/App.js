@@ -7,49 +7,31 @@ export default class App extends Component {
 
   state = {
     displayNumber: 0,
-    storedNumber: "",
     currentNumber: "",
+    firstNumber: "",
+    secondNumber: "",
     operator: "",
     sum: 0
   }
 
   recordEntry = (buttonPressed) => {
     console.log(buttonPressed);
-    console.log(typeof(buttonPressed));
 
     const stateCopy = {...this.state}
-
-    // if(stateCopy.displayNumber === 0) {
-    //   stateCopy.displayNumber = "";
-    // }
     
-    // this.setState({
-    //   displayNumber: stateCopy.displayNumber + buttonPressed.toString()
-    // })
-
     switch(buttonPressed) {
       case "ac":
-        this.setState({
-          displayNumber: 0,
-          currentNumber: "",
-          storedNumber: ""
-        })
+        this.newNumberStart()
         break;
+
       case 0:
         if(stateCopy.displayNumber === 0) {
-          this.setState({
-            displayNumber: 0,
-            currentNumber: "",
-            storedNumber: ""
-          })
+          this.newNumberStart()
         } else {
-          this.setState({
-            displayNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            currentNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            storedNumber: stateCopy.displayNumber + buttonPressed.toString()
-          })
+          this.setCurrentNumber(stateCopy.displayNumber, buttonPressed.toString())
         }
         break;
+
       case 1:
       case 2:
       case 3:
@@ -61,85 +43,112 @@ export default class App extends Component {
       case 9:
         if(stateCopy.displayNumber === 0) {
           stateCopy.displayNumber = "";
-          this.setState({
-            displayNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            currentNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            storedNumber: stateCopy.displayNumber + buttonPressed.toString()
-          })
+          this.setCurrentNumber(stateCopy.displayNumber, buttonPressed.toString())
         } else {
-          this.setState({
-            displayNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            currentNumber: stateCopy.displayNumber + buttonPressed.toString(),
-            storedNumber: stateCopy.displayNumber + buttonPressed.toString()
-          })
+          this.setCurrentNumber(stateCopy.displayNumber, buttonPressed.toString())
         }
         break;
+
       case "÷":
         console.log("IN DIVIDE CASE")
     
         break;
+
       case "x":
         console.log("IN MULTIPLY CASE")
    
         break;
+
       case "-":
         console.log("IN MINUS CASE")
      
         break;
+
       case "+":
         console.log("IN ADDITION CASE")
-
-        if (this.state.currentNumber > 0) {
-          this.setState({
-            operator: "+"
-          })
-          console.log("OPERATORE SET TO +")
+        
+        if (stateCopy.displayNumber > 0) {
+          this.addition(stateCopy.displayNumber)
         }
        
         break;
+
       case "=":
         console.log("IN EQUAL CASE")
-        if (this.state.operator === "+") {
-          this.setState({
-            sum: this.state.currentNumber + this.state.displayNumber
-          })
-        } 
-        // else if (this.state.operator === "-") {
-        //   this.setState({
-        //     sum: this.state.currentNumber - this.state.displayNumber
-        //   })
-        // } 
-        // else if (this.state.operator === "x") {
-        //   this.setState({
-        //     sum: this.state.currentNumber * this.state.displayNumber
-        //   })
-        // } 
-        // else if (this.state.operator === "÷") {
-        //   this.setState({
-        //     sum: this.state.currentNumber / this.state.displayNumber
-        //   })
-        // }
+        this.setState({
+          secondNumber: stateCopy.displayNumber
+        })
+        this.equals()
        
         break;
+
       case "+/-":
         console.log("Function Not Yet Supported")
         break;
+
       case "%":
         console.log("Function Not Yet Supported")
         break;
+
       case ".":
         console.log("Function Not Yet Supported")
         break;
+
       default:
         console.log("Calulator Failed!")
     }
     
   }
 
+  newNumberStart = () => {
+    console.log("TRYING TO RESET TO 0")
+    this.setState({
+      displayNumber: 0,
+      currentNumber: "",
+      firstNumber: 0,
+      secondNumber: 0,
+      sum: 0
+    })
+    console.log(`NewNumberStart ${this.state.displayNumber}`)
+  }
+
+  setCurrentNumber = (displayNo, buttonPressed) => {
+    this.setState({
+      displayNumber: displayNo + buttonPressed
+    })
+  }
+
+  addition = (displayNo) => {
+    if (this.state.firstNumber === "") {
+      this.setState({
+        operator: "+",
+        firstNumber: displayNo
+      })
+    } else {
+      this.setState({
+        operator: "+",
+        secondNumber: displayNo
+      })
+    }
+  }
+
+  equals = () => {
+    console.log(`equals secondNumber ${this.state.secondNumber}`)
+    if(this.state.operator === "+") {
+      this.setState({
+        sum: parseInt(this.state.firstNumber) + parseInt(this.state.secondNumber)
+      })
+    }
+  }
+
   render() {
 
-    console.log(`Stored Number: ${this.state.currentNumber}`)
     console.log(`Display Number: ${this.state.displayNumber}`)
+    console.log(`Current Number: ${this.state.currentNumber}`)
+    console.log(`First Number: ${this.state.firstNumber}`)
+    console.log(`Operator: ${this.state.operator}`)
+    console.log(`Second Number: ${this.state.secondNumber}`)
+    console.log(`SUM: ${this.state.sum}`)
 
     return (
       <div>
@@ -151,38 +160,38 @@ export default class App extends Component {
       </div>
 
       <div className="line2">
-        <button onClick={() => this.recordEntry("ac")} id="ac" className="buttonFuncA AC">AC</button>
-        <button onClick={() => this.recordEntry("+/-")} id="+/-" className="buttonFuncA plusMinus">+/-</button>
-        <button onClick={() => this.recordEntry("%")} id="%" className="buttonFuncA percent">%</button>
-        <button onClick={() => this.recordEntry("÷")} id="÷" className="buttonFuncB divide">÷</button>
+        <button onClick={() => this.recordEntry("ac")} className="buttonFuncA AC">AC</button>
+        <button onClick={() => this.recordEntry("+/-")} className="buttonFuncA plusMinus">+/-</button>
+        <button onClick={() => this.recordEntry("%")} className="buttonFuncA percent">%</button>
+        <button onClick={() => this.recordEntry("÷")} className="buttonFuncB divide">÷</button>
       </div>
 
       <div className="line3">
         <button onClick={() => this.recordEntry(7)} className="button seven">7</button>
         <button onClick={() => this.recordEntry(8)} className="button eight">8</button>
-        <button onClick={() => this.recordEntry(9)} id="9" className="button nine">9</button>
-        <button onClick={() => this.recordEntry("x")} id="x" className="buttonFuncB multiply">x</button>
+        <button onClick={() => this.recordEntry(9)} className="button nine">9</button>
+        <button onClick={() => this.recordEntry("x")} className="buttonFuncB multiply">x</button>
       </div>
 
       <div className="line4">
-        <button onClick={() => this.recordEntry(4)} id="4" className="button four">4</button>
-        <button onClick={() => this.recordEntry(5)} id="5" className="button five">5</button>
-        <button onClick={() => this.recordEntry(6)} id="6" className="button six">6</button>
-        <button onClick={() => this.recordEntry("-")} id="-" className="buttonFuncB minus">-</button>
+        <button onClick={() => this.recordEntry(4)} className="button four">4</button>
+        <button onClick={() => this.recordEntry(5)} className="button five">5</button>
+        <button onClick={() => this.recordEntry(6)} className="button six">6</button>
+        <button onClick={() => this.recordEntry("-")} className="buttonFuncB minus">-</button>
       </div>
 
       <div className="line5">
-        <button onClick={() => this.recordEntry(1)} id="1" className="button four">1</button>
-        <button onClick={() => this.recordEntry(2)} id="2" className="button five">2</button>
-        <button onClick={() => this.recordEntry(3)} id="3" className="button six">3</button>
-        <button onClick={() => this.recordEntry("+")} id="+" className="buttonFuncB plus">+</button>
+        <button onClick={() => this.recordEntry(1)} className="button four">1</button>
+        <button onClick={() => this.recordEntry(2)} className="button five">2</button>
+        <button onClick={() => this.recordEntry(3)} className="button six">3</button>
+        <button onClick={() => this.recordEntry("+")} className="buttonFuncB plus">+</button>
       </div>
 
       <div className="line6">
-        <button onClick={() => this.recordEntry(0)} id="0" className="button zero">0</button>
+        <button onClick={() => this.recordEntry(0)} className="button zero">0</button>
   
-        <button onClick={() => this.recordEntry(".")} id="." className="button point">.</button>
-        <button onClick={() => this.recordEntry("=")} id="=" className="buttonFuncB equal">=</button>
+        <button onClick={() => this.recordEntry(".")} className="button point">.</button>
+        <button onClick={() => this.recordEntry("=")} className="buttonFuncB equal">=</button>
         
       </div>
       

@@ -8,9 +8,7 @@ export default class App extends Component {
   state = {
     displayNumber: 0,
     firstNumber: "",
-    secondNumber: "",
     operator: "",
-    sum: 0,
     currentNumber: 0,
     firstNumberStored: false
   }
@@ -43,9 +41,7 @@ export default class App extends Component {
     this.setState({
       displayNumber: 0,
       firstNumber: "",
-      secondNumber: "",
       operator: "",
-      sum: 0,
       currentNumber: 0,
       firstNumberStored: false
     })
@@ -85,11 +81,10 @@ export default class App extends Component {
     })
 
     if(stateCopy.firstNumberStored) {
-      console.log("PLUS PRESSED BEFORE EQUALS!")
+      console.log("Plus pressed before equal!")
     } else {
-      console.log("STORE DISPLAY IN FIRSTNUMBER")
+      console.log("Store currentNumber in firstNumber")
       this.setState({
-        // firstNumber: stateCopy.displayNumber,
         firstNumber: stateCopy.currentNumber,
         displayNumber: 0,
         currentNumber: 0,
@@ -120,41 +115,23 @@ export default class App extends Component {
 
     if(stateCopy.firstNumberStored) {
       console.log("firstNumber Has Value")
-      this.setState({
-        secondNumber: stateCopy.currentNumber
-      })
-      this.displayResult()
+      if(this.state.operator === "+") {
+        this.setState({
+          displayNumber: parseInt(this.state.firstNumber) + parseInt(this.state.currentNumber),
+          currentNumber: parseInt(this.state.firstNumber) + parseInt(this.state.currentNumber)
+        })
+      }
     } else {
       console.log("firstNumber has not been stored yet")
     }
 
   }
 
-  displayResult = () => {
-    console.log("IN DISPLAY RESULT FUNCTION")
-
-    if(this.state.operator === "+") {
-      this.setState({
-        displayNumber: parseInt(this.state.firstNumber) + parseInt(this.state.currentNumber)
-      })
-      // this.replaceFirstNum()
-    }
-    
-  }
-
-  // replaceFirstNum = () => {
-  //   this.setState({
-  //     firstNumber: this.state.displayNumber
-  //   })
-  // }
-
   render() {
 
     console.log(`Display Number: ${this.state.displayNumber}`)
     console.log(`First Number: ${this.state.firstNumber}`)
     console.log(`Operator: ${this.state.operator}`)
-    console.log(`Second Number: ${this.state.secondNumber}`)
-    console.log(`SUM: ${this.state.sum}`)
 
     return (
       <div>
